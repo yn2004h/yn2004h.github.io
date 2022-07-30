@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body></body>
+<script>
+/*
+作者：香江鱼@哔喱哔喱；香江鱼@今日头条
+*/
+let canvas,ctx,actx,osc,gain
+
+window.onload = function(){
+	main()
+}
+
+function main(){
+	document.body.style.backgroundColor = 'gray'
+	canvas = document.createElement('canvas')
+	document.body.appendChild(canvas)
+	canvas.style.backgroundColor = 'white'
+	canvas.width = 1200
+	canvas.height = 600
+	ctx = canvas.getContext('2d')
+	ctx.globalAlpha = 0.1
+	canvas.onmousedown = function(e){
+		if(!actx) initAudio()
+		canvas.down = true
+		playAndDraw(e)
+	}
+	canvas.onmousemove = function(e){
+		if(canvas.down) playAndDraw(e)
+	}
+	canvas.onmouseup = canvas.onmouseleave = function(e){
+		canvas.down = false
+		if(gain) stop()
+	}
+}
+
+function playAndDraw(e){
+	play(880*(1-e.offsetY/canvas.height),0.05)
+	ctx.fillRect(e.offsetX-5,e.offsetY-5,10,10)
+}
+
+function initAudio(){
+	actx = new AudioContext()
+	osc = actx.createOscillator()
+	osc.type = 'square'
+	gain = actx.createGain()
+	osc.connect(gain)
+	gain.connect(actx.destination)
+	gain.gain.setValueAtTime(0,actx.currentTime)
+	osc.start()
+}
+
+function play(fre,g){
+	console.log(fre,g)
+	osc.frequency.setValueAtTime(fre,actx.currentTime)
+	gain.gain.setValueAtTime(g>0?g:0,actx.currentTime)
+}
+function stop(){
+	gain.gain.setValueAtTime(0,actx.currentTime)
+}
+</script>
+</html>
