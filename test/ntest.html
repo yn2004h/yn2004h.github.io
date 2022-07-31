@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浏览器测试API by 香江鱼@bilibili.com</title>
+
+<style>
+
+</style>
+
+<script>
+
+this.onload = e=>{
+	let ta = document.querySelector('#window_info')
+	console.log(ta)
+	
+	ta.value = Object.getOwnPropertyNames(window).join('\n')
+}
+
+
+</script>
+	
+</head>
+<body>
+<div>window.*</div>
+<br />
+<textarea style="width:60%;height:500px;" id="window_info"></textarea>
+</body>
+</html>
