@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电子音乐键盘之十九平均律 by 香江鱼@bilibili.com</title>
+
+<style>
+
+</style>
+
+<script>
+
+function midinote2fre(note) {
+    return Math.pow(2, ((note - 80) / 19)) * 440;
+}
+
+
+let types = ['sine','square','sawtooth','triangle']
+
+let notelist = {
+	'C':[66,'C'],'C#':[67,'C#'],'Db':[68,'Db'],
+	'D':[69,'D'],'D#':[70,'D#'],'Eb':[71,'Eb'],
+	'E':[72,'E'],'E#':[73,'E#'],'Fb':[73,'Fb'],
+	'F':[74,'F'],'F#':[75,'F#'],'Gb':[76,'Gb'],
+	'G':[77,'G'],'G#':[78,'G#'],'Ab':[79,'Ab'],
+	'A':[80,'A'],'A#':[81,'A#'],'Bb':[82,'Bb'],
+	'B':[83,'B'],'B#':[84,'B#'],'Cb':[84,'Cb'],
+	getPlayData(ly){
+		if(ly.type == 100){
+			return {type:'req',rtype:types[ly.rtype],req:ly.req,name:'req:'+ly.req}
+		}else{
+			let midinote = this[ly.name][0]+19*(ly.group-4)
+			return {name:this[ly.name][1]+ly.group,rtype:types[ly.rtype],req:midinote2fre(midinote),midinote}
+		}
+	},
+}
+
+
+let keylayouts = {
+	decode(code){
+		return code[0] == 100 ? 
+					notelist.getPlayData({type:code[0],rtype:code[1],req:code[2]}) :
+					notelist.getPlayData({rtype:code[0],name:code[1],group:code[2]})
+					
+	}
+}
+
+
+keylayouts.default = {
+	//KeyQ:[1,'Db',4],//参数1：波类型，参数2：音名，参数3：组名
+	//KeyW:[100,1,441],//参数1为100时，表示自定义频率，参数2：波类型，参数3：频率
+	
+	
+	
+	Backquote:[1,'B',3],
+	Digit1:[1,'C',4],
+	Digit2:[1,'D',4],
+	Digit3:[1,'E',4],
+	Digit4:[1,'F',4],
+	Digit5:[1,'G',4],
+	Digit6:[1,'A',4],
+	Digit7:[1,'B',4],
+	Digit8:[1,'C',5],
+	Digit9:[1,'D',5],
+	Digit0:[1,'E',5],
+	Minus:[1,'F',5],
+	Equal:[1,'G',5],
+//	Backspace:[0,'A',5],
+	
+	
+//	Tab:[1,'B',3],
+	KeyQ:[1,'C#',4],
+	KeyW:[1,'D#',4],
+	KeyE:[1,'E#',4],
+	KeyR:[1,'F#',4],
+	KeyT:[1,'G#',4],
+	KeyY:[1,'A#',4],
+	KeyU:[1,'B#',4],
+	KeyI:[1,'C#',5],
+	KeyO:[1,'D#',5],
+	KeyP:[1,'E#',5],
+	BracketLeft:[1,'F#',5],
+	BracketRight:[1,'G#',5],
+	Backslash:[1,'A#',5,],
+	
+	
+	
+	KeyA:[1,'Db',4],
+	KeyS:[1,'Eb',4],
+	KeyD:[1,'Fb',4],
+	KeyF:[1,'Gb',4],
+	KeyG:[1,'Ab',4],
+	KeyH:[1,'Bb',4],
+	KeyJ:[1,'Cb',4],
+	KeyK:[1,'Db',5],
+	KeyL:[1,'Eb',5],
+	Semicolon:[1,'Fb',5],
+	Quote:[1,'Gb',5],
+	
+	KeyZ:[1,'C',3],
+	KeyX:[1,'D',3],
+	KeyC:[1,'E',3],
+	KeyV:[1,'F',3],
+	KeyB:[1,'G',3],
+	KeyN:[1,'A',3],
+	KeyM:[1,'B',3],
+	Comma:[1,'C',4],
+	Period:[1,'D',4],
+	Slash:[1,'E',4],
+	
+	Space:[100,1,55],
+	
+}
+
+
+class Player {
+	codeNote = {}
+	oscs = {}
+	constructor(kl){
+		if(kl) this.setKeyLayout(kl)
+	}
+	
+	setKeyLayout(kl){
+		for(let k in kl){
+			
+			let {name,rtype,req,midinote} = keylayouts.decode(kl[k])
+			//rtype = rtype == 'square' && 'sawtooth'
+			this.setCodeNote({code:k,name,rtype,req,midinote})
+		}
+		return this
+	}
+	
+	initAudioContext(){
+		console.log('initAudioContext')
+		if(!this.actx) this.actx = new AudioContext()
+		return this
+	}
+	
+	setCodeNote(args){
+		//console.log(args)
+		let {code,name,rtype,req,midinote} = args
+		if(!req && midinote) req = midinote2fre(midinote) 
+		this.codeNote[code] = {name,rtype,req,midinote}
+		return this
+	}
+	
+	playCode(code){
+		if(!this.codeNote[code]) return
+		let osc = this.oscs[code]
+		if(!osc){
+			let cn = this.codeNote[code]
+			console.log(code,cn.name,cn.rtype,cn.req,cn.midinote)
+			osc = this.actx.createOscillator()
+			osc.type = cn.rtype
+			osc.frequency.value = cn.req
+			osc.connect(this.actx.destination)
+			osc.start()
+			
+			this.oscs[code] = osc
+		}
+	}
+	
+	stopCode(code){
+		if(!this.codeNote[code]) return
+		let osc = this.oscs[code]
+		if(osc){	
+			osc.stop()
+			osc.disconnect()
+			this.oscs[code] = null
+		}
+	
+	}
+	
+
+}
+
+
+let player = new Player(keylayouts.default)
+//player.setCodeNote({code:'KeyA',name:'A4',rtype:'square',req:440})
+
+
+
+this.onload = e=>{
+	let ta = document.querySelector('#player')
+	console.log(ta)
+	ta.onkeydown = e=>{
+		console.log(e)
+		player.playCode(e.code)
+	}
+	ta.onkeyup = e=>{
+		player.stopCode(e.code)
+	}
+	ta.onfocus = e=>{
+		console.log('onfocus',e)
+		player.initAudioContext()
+	}
+}
+
+
+
+</script>
+	
+</head>
+<body>
+<div>源码分享：一个可以弹琴的网页(十九平均律) by 香江鱼@bilibili</div>
+<br />
+<textarea style="width:85%;height:300px;" id="player"></textarea>
+</body>
+</html>
