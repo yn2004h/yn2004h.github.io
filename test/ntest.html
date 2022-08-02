@@ -10,12 +10,30 @@
 </style>
 
 <script>
+let ta
+function dir(p){
+	ta.value = p ? Object.getOwnPropertyNames(p).join('\n') : ''
+}
+
+function check(){
+	dir(window[document.querySelector('#p').value])
+}
+
+
+function checkPrototype(){
+	dir(window[document.querySelector('#p').value].prototype)
+}
+
+
+function check__proto__(){
+	dir(window[document.querySelector('#p').value].__proto__)
+}
 
 this.onload = e=>{
-	let ta = document.querySelector('#window_info')
+	if(!ta) ta = document.querySelector('#window_info')
 	console.log(ta)
+	check()
 	
-	ta.value = Object.getOwnPropertyNames(window).join('\n')
 }
 
 
@@ -23,8 +41,13 @@ this.onload = e=>{
 	
 </head>
 <body>
-<div>window.*</div>
-<br />
+<div>
+<input id="p" type="text" value="window">
+<button type="button" onclick="check()">查询</button>
+<button type="button" onclick="checkPrototype()">prototype查询</button>
+<button type="button" onclick="check__proto__()">__proto__查询</button>
+</div>
+<br>
 <textarea style="width:60%;height:500px;" id="window_info"></textarea>
 </body>
 </html>
