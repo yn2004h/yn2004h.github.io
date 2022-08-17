@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+		html,body{
+			height:98vh;
+			width:100vw;
+			margin:0px;
+			padding:0px;
+			background-color:#666666;
+			overflow:hidden;
+		}
+		
+		#canvas_con {
+			margin:10px;
+			height:100%;
+			box-sizing:border-box;
+			background-color:#ffffff;
+		}
+		.yuman_canvas {
+			width:100%;
+			height:100%;
+		}
+		
+		</style>
+		<title>鱼漫</title>
+	</head>
+	<body>
+	<div id="canvas_con">
+		<canvas class="yuman_canvas" id="yucanvas"></canvas>
+	</div>
+	<script type="text/javascript">
+	
+let log = console.log
+
+window.onclick = function(e){} //用来阻止浏览器中键点击滚动页面功能。
+
+var eventsHandlers = {
+	onkeydown:function(e){},
+	onkeypress:function(e){},
+	onkeyup:function(e){},
+	onmousewheel:function(e){},
+	onmousedown:function(e){},
+	onmousemove:function(e){},
+	onmouseup:function(e){},
+	onmouseleave:function(e){this.onmouseup(e)},
+	onmouseout:function(e){this.onmouseup(e)},
+}
+
+
+window.onkeydown = function(e){
+	eventsHandlers.onkeydown(e)
+}
+
+window.onkeypress = function(e){
+	eventsHandlers.onkeypress(e)
+}
+
+window.onkeyup = function(e){
+	eventsHandlers.onkeyup(e)
+}
+
+
+let canvas = document.getElementById("yucanvas")
+//log(canvas.__proto__,canvas.clientWidth,canvas.clientHeight,canvas.offsetWidth)
+
+canvas.width = canvas.clientWidth
+canvas.height = canvas.clientHeight
+log(canvas)
+
+window.onresize = function(e){
+	canvas.width = canvas.clientWidth
+	canvas.height = canvas.clientHeight
+}
+
+
+canvas.onmousewheel = function(e){
+	//log(this)
+	eventsHandlers.onmousewheel(e)
+	{//取消滚轮事件冒泡，用来阻止浏览器滚轮缩放功能。
+		e.cancelBubble = true 
+		e.preventDefault() 
+	}
+}
+
+canvas.onmousedown = function(e){
+	eventsHandlers.onmousedown({x:e.offsetX,y:e.offsetY})
+}
+canvas.onmousemove = function(e){
+	eventsHandlers.onmousemove({x:e.offsetX,y:e.offsetY})
+}
+canvas.onmouseup = function(e){
+	eventsHandlers.onmouseup({x:e.offsetX,y:e.offsetY})
+}
+canvas.onmouseleave = function(e){
+	eventsHandlers.onmouseleave(e)
+}
+canvas.onmouseout = function(e){
+	eventsHandlers.onmouseout(e)
+}
+if(canvas.ontouchstart){
+	canvas.ontouchstart = function(e){
+		eventsHandlers.onmousedown({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+	}
+	canvas.ontouchmove = function(e){
+		eventsHandlers.onmousemove({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+	}
+	canvas.ontouchend = function(e){
+		eventsHandlers.onmouseup({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+	}
+}
+
+let cxt = canvas.getContext("2d")
+
+console.log(cxt)
+
+
+
+
+class Node {
+	id = Symbol()
+	input = null
+	output = null
+}
+
+
+class Point extends Node {
+	x = 0
+	y = 0
+	size = 10
+	color = "#000000"
+	alpha = 1.0
+	weight = 0.5
+	constructor(x,y,size,color,alpha,weight){
+		super()
+		this.x = x
+		this.y = y
+		this.size = size
+		this.color = color
+		this.alpha = alpha
+		this.weight = weight
+	}
+}
+
+function mkPoint(x = 0,y = 0,size = 10,color = "#000000",alpha = 1.0,weight = 0.5){
+	return new Point(x,y,size,color,alpha,weight)
+}
+
+
+function lineRender(canvas,points,closePath = false){
+	if(points.length < 2) return
+	if(closePath) points.push(points[0])
+	let cxt = canvas.getContext("2d")
+	let count = points.length - 1
+	for(let i=0;i < count;i++){
+		let p1 = points[i]
+		let p2 = points[i+1]
+		cxt.lineWidth = p1.size
+		cxt.lineCap = 'round'
+		cxt.beginPath()
+		cxt.moveTo(p1.x,p1.y)
+		cxt.lineTo(p2.x,p2.y)
+		cxt.stroke()
+	}
+	
+}
+
+function fillRender(canvas,points,style = "#000000"){
+	if(points.length < 2) return
+	let cxt = canvas.getContext("2d")
+	let count = points.length
+	cxt.fillStyle = style
+	cxt.beginPath()
+	cxt.moveTo(points[0].x,points[0].y)
+	for(let i=1;i < count;i++){
+		let p = points[i]
+		cxt.lineTo(p.x,p.y)
+	}
+	cxt.fill()
+}
+
+{//test code
+	let ps = [
+		mkPoint(10,10,10),
+		mkPoint(200,10,20),
+		mkPoint(200,200,0.2)
+	]
+
+	//fillRender(canvas,ps,"#ff0000")
+	//lineRender(canvas,ps,true)
+}
+
+function sketchMode(canvas,eventsHandlers){	
+	let p = {x:0,y:0}
+	let cxt = canvas.getContext('2d')
+	cxt.strokeStyle = '#0009'
+	cxt.fillStyle = "#ff4444"
+	//cxt.fillRect(0,0,canvas.width,canvas.height)
+	cxt.lineWidth = 1
+	cxt.lineCap = 'round'
+	let lw = 1
+
+	let candraw = false
+	
+	let lenght = 0,length1 = 0
+	
+	let count = 0
+	
+	Object.assign(eventsHandlers,{
+		onmousedown:e=>{
+			log(e)
+			cxt.clearRect(0,0,1000,20)
+			cxt.fillText('info:x='+e.x+',y='+e.y,10,15)
+			candraw = true
+			p.x = e.x
+			p.y = e.y
+			count = 0
+			length = 0
+			cxt.lineWidth = 1
+		},
+		onmousemove:e=>{
+			if(!candraw) return
+			count++
+			//if(count%2 == 0) return
+			length1 = Math.sqrt(Math.pow(e.x-p.x,2)+Math.pow(e.y-p.y,2))
+			lw *= length1 < length ? 1.2 : 0.8
+			if(lw < 1) lw = 1
+			if(lw > 10) lw = 10
+			cxt.lineWidth = lw
+			
+			length = length1
+			
+			
+			
+			
+			cxt.beginPath()
+			cxt.moveTo(p.x,p.y)
+			p.x = e.x
+			p.y = e.y
+			cxt.lineTo(p.x,p.y)
+			cxt.stroke()
+			//cxt.fillRect(p.x-1,p.y-1,2,2)
+			
+		},
+		onmouseup:e=>{
+			candraw = false
+		},
+		onkeydown:e=>{
+			//canvas.width += 10
+			//log(e)
+		}
+	})
+}
+
+sketchMode(canvas,eventsHandlers)
+
+
+
+class Link {
+	start = null
+	end = null
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</script>
+	</body>
+</html>
