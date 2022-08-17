@@ -100,12 +100,15 @@ canvas.onmouseout = function(e){
 }
 if(canvas.ontouchstart){
 	canvas.ontouchstart = function(e){
+		e.stopPropagation()
 		eventsHandlers.onmousedown({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
 	}
 	canvas.ontouchmove = function(e){
+		e.stopPropagation()
 		eventsHandlers.onmousemove({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
 	}
 	canvas.ontouchend = function(e){
+		e.stopPropagation()
 		eventsHandlers.onmouseup({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
 	}
 }
