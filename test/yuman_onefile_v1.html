@@ -219,6 +219,9 @@ function sketchMode(canvas,eventsHandlers){
 			cxt.lineWidth = 1
 		},
 		onmousemove:e=>{
+			cxt.clearRect(0,0,1000,20)
+			cxt.fillText('info:x='+e.x+',y='+e.y,10,15)
+			
 			if(!candraw) return
 			count++
 			//if(count%2 == 0) return
