@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="user-scalable=no">
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1">
+		<meta name="viewport" content="width=device-width">
 		<style>
 		html,body{
-			height:98vh;
-			width:100vw;
+			height:100%;
+			width:100%;
 			margin:0px;
 			padding:0px;
 			background-color:#666666;
@@ -12,12 +15,13 @@
 		}
 		
 		#canvas_con {
-			margin:10px;
+			margin:100%;
 			height:100%;
 			box-sizing:border-box;
 			background-color:#ffffff;
 		}
 		.yuman_canvas {
+			touch-action:none;
 			width:100%;
 			height:100%;
 		}
@@ -101,15 +105,21 @@ canvas.onmouseout = function(e){
 if(canvas.ontouchstart){
 	canvas.ontouchstart = function(e){
 		e.stopPropagation()
+		e.preventDefault()
 		eventsHandlers.onmousedown({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		return false
 	}
 	canvas.ontouchmove = function(e){
 		e.stopPropagation()
+		e.preventDefault()
 		eventsHandlers.onmousemove({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		return false
 	}
 	canvas.ontouchend = function(e){
 		e.stopPropagation()
+		e.preventDefault()
 		eventsHandlers.onmouseup({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		return false
 	}
 }
 
