@@ -15,7 +15,7 @@
 		}
 		
 		#canvas_con {
-			margin:100%;
+			width:100%;
 			height:100%;
 			box-sizing:border-box;
 			background-color:#ffffff;
@@ -27,7 +27,7 @@
 		}
 		
 		</style>
-		<title>鱼漫</title>
+		<title>鱼漫000</title>
 	</head>
 	<body>
 	<div id="canvas_con">
@@ -104,22 +104,22 @@ canvas.onmouseout = function(e){
 }
 if(canvas.ontouchstart){
 	canvas.ontouchstart = function(e){
-		e.stopPropagation()
-		e.preventDefault()
+		//e.stopPropagation()
+		//e.preventDefault()
 		eventsHandlers.onmousedown({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
-		return false
+		//return false
 	}
 	canvas.ontouchmove = function(e){
-		e.stopPropagation()
-		e.preventDefault()
+		//e.stopPropagation()
+		//e.preventDefault()
 		eventsHandlers.onmousemove({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
-		return false
+		//return false
 	}
 	canvas.ontouchend = function(e){
-		e.stopPropagation()
-		e.preventDefault()
+		//e.stopPropagation()
+		//e.preventDefault()
 		eventsHandlers.onmouseup({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
-		return false
+		//return false
 	}
 }
 
@@ -232,6 +232,7 @@ function sketchMode(canvas,eventsHandlers){
 			cxt.lineWidth = 1
 		},
 		onmousemove:e=>{
+			log(e)
 			cxt.clearRect(0,0,1000,20)
 			cxt.fillText('info:x='+e.x+',y='+e.y,10,15)
 			
@@ -259,6 +260,7 @@ function sketchMode(canvas,eventsHandlers){
 			
 		},
 		onmouseup:e=>{
+			log('up',e)
 			candraw = false
 		},
 		onkeydown:e=>{
