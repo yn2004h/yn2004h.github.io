@@ -21,19 +21,20 @@
 			background-color:#ffffff;
 		}
 		.yuman_canvas {
+			touch-action: manipulation;
 			width:100%;
 			height:100%;
 		}
 		
 		</style>
-		<title>鱼漫001</title>
+		<title>鱼漫</title>
 	</head>
 	<body>
 	<div id="canvas_con">
 		<canvas class="yuman_canvas" id="yucanvas"></canvas>
 	</div>
 	<script type="text/javascript">
-	
+	let preInfo = 'v002'
 let log = console.log
 
 window.onclick = function(e){} //用来阻止浏览器中键点击滚动页面功能。
@@ -223,7 +224,7 @@ function sketchMode(canvas,eventsHandlers){
 		onmousedown:e=>{
 			log(e)
 			cxt.clearRect(0,0,1000,20)
-			cxt.fillText('info:x='+e.x+',y='+e.y,10,15)
+			cxt.fillText(preInfo+'info:x='+e.x+',y='+e.y,10,15)
 			candraw = true
 			p.x = e.x
 			p.y = e.y
@@ -234,7 +235,7 @@ function sketchMode(canvas,eventsHandlers){
 		onmousemove:e=>{
 			log(e)
 			cxt.clearRect(0,0,1000,20)
-			cxt.fillText('info:x='+e.x+',y='+e.y,10,15)
+			cxt.fillText(preInfo+',info:x='+e.x+',y='+e.y,10,15)
 			
 			if(!candraw) return
 			count++
