@@ -34,7 +34,8 @@
 		<canvas class="yuman_canvas" id="yucanvas"></canvas>
 	</div>
 	<script type="text/javascript">
-	let preInfo = 'v003'
+	let preInfo = 'v004'
+	
 let log = console.log
 
 window.onclick = function(e){} //用来阻止浏览器中键点击滚动页面功能。
@@ -105,22 +106,22 @@ canvas.onmouseout = function(e){
 if(canvas.ontouchstart){
 	canvas.ontouchstart = function(e){
 		//e.stopPropagation()
-		eventsHandlers.onmousedown({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		eventsHandlers.onmousedown({x:e.touches[0].clientX,y:e.touches[0].clientY})
 		
 		e.preventDefault()
-		return false
+		//return false
 	}
 	canvas.ontouchmove = function(e){
 		//e.stopPropagation()
-		eventsHandlers.onmousemove({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		eventsHandlers.onmousemove({x:e.touches[0].clientX,y:e.touches[0].clientY})
 		e.preventDefault()
-		return false
+		//return false
 	}
 	canvas.ontouchend = function(e){
 		//e.stopPropagation()
-		eventsHandlers.onmouseup({x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY})
+		eventsHandlers.onmouseup({x:e.touches[0].clientX,y:e.touches[0].clientY})
 		e.preventDefault()
-		return false
+		//return false
 	}
 }
 
