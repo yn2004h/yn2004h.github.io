@@ -34,7 +34,7 @@
 		<canvas class="yuman_canvas" id="yucanvas"></canvas>
 	</div>
 	<script type="text/javascript">
-	let preInfo = 'v0.0.5'
+	let preInfo = 'v0.0.6'
 	
 let log = console.log
 
@@ -104,19 +104,19 @@ canvas.onmouseout = function(e){
 	eventsHandlers.onmouseout(e)
 }
 if(canvas.ontouchstart){
-	canvas.addEventListener('touchstart',function(e){
+	document.addEventListener('touchstart',function(e){
 		//e.stopPropagation()
 		eventsHandlers.onmousedown({x:e.touches[0].clientX,y:e.touches[0].clientY})		
 		e.preventDefault()
 		//return false
 	},false)
-	canvas.addEventListener('touchmove',function(e){
+	document.addEventListener('touchmove',function(e){
 		//e.stopPropagation()
 		eventsHandlers.onmousemove({x:e.touches[0].clientX,y:e.touches[0].clientY})
 		e.preventDefault()
 		//return false
 	},false)
-	canvas.addEventListener('touchend',function(e){
+	document.addEventListener('touchend',function(e){
 		//e.stopPropagation()
 		eventsHandlers.onmouseup({x:e.touches[0].clientX,y:e.touches[0].clientY})
 		e.preventDefault()
