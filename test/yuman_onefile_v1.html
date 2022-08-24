@@ -103,7 +103,7 @@ canvas.onmouseleave = function(e){
 canvas.onmouseout = function(e){
 	eventsHandlers.onmouseout(e)
 }
-if(canvas.ontouchstart){
+//if(canvas.ontouchstart){
 	document.addEventListener('touchstart',function(e){
 		//e.stopPropagation()
 		eventsHandlers.onmousedown({x:e.touches[0].clientX,y:e.touches[0].clientY})		
@@ -122,7 +122,7 @@ if(canvas.ontouchstart){
 		e.preventDefault()
 		//return false
 	},false)
-}
+//}
 
 let cxt = canvas.getContext("2d")
 
