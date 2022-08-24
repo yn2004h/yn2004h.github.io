@@ -16,6 +16,7 @@
     }
 </style>
 <script>
+let v = '0.0.3'
 let mycanvas,ctx,_info
 window.onload = function(){
     main()
@@ -39,10 +40,10 @@ function initEventListener(){
     mycanvas.addEventListener('touchmove',ontouchmove,false)
 }
 function ontouchstart(e){
-    info('ontouchstart',e.touches[0].clientX)
+    info(v,'ontouchstart',e.touches[0].clientX)
 }
 function ontouchmove(e){
-    info('ontouchmove',e.touches[0],clientX)
+    info(v,'ontouchmove',e.touches[0],clientX)
 }
 
 </script>
