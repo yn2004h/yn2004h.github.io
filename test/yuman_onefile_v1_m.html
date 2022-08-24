@@ -21,7 +21,7 @@ window.onload = function(){
     main()
 }
 function main(){
-    mycanvas = document.querySelector('mycanvas')
+    mycanvas = document.querySelector('#mycanvas')
     ctx = mycanvas.getContext('2d')
     info('main',mycanvas)
     initEventListener()
@@ -35,7 +35,14 @@ function info(...args){
 
 }
 function initEventListener(){
-
+    mycanvas.addEventListener('touchstart',ontouchstart,false)
+    mycanvas.addEventListener('touchmove',ontouchmove,false)
+}
+function ontouchstart(e){
+    info('ontouchstart',e.touches[0].clientX)
+}
+function ontouchmove(e){
+    info('ontouchmove',e.touches[0],clientX)
 }
 
 </script>
