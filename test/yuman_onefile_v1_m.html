@@ -16,7 +16,7 @@
     }
 </style>
 <script>
-let v = '0.0.5'
+let v = '0.0.6'
 let mycanvas,ctx,_info
 window.onload = function(){
     main()
@@ -32,7 +32,7 @@ function main(){
 function info(...args){
     let str = args.join(',')
     ctx.fillStyle = '#f00'
-    //ctx.font = '30px'
+    ctx.font = '30px'
     ctx.clearRect(0,0,mycanvas.width,35)
     ctx.fillText(str,0,30,mycanvas.width)
 
@@ -43,9 +43,11 @@ function initEventListener(){
 }
 function ontouchstart(e){
     info(v,'ontouchstart',e.touches[0].clientX)
+    e.preventDefault()
 }
 function ontouchmove(e){
     info(v,'ontouchmove',e.touches[0].clientX)
+    e.preventDefault()
 }
 
 </script>
