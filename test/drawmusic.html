@@ -1,7 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"></head>
-<body></body>
+<head><meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no">
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1">
+	<meta name="viewport" content="width=device-width">
+	<style>
+	html,body{
+		height:100%;
+		width:100%;
+		margin:0px;
+		padding:0px;
+		background-color:#666666;
+		overflow:hidden;
+	}
+	
+	#canvas {
+		width:100%;
+		height:100%;
+		background-color:#ffffff;
+	}
+	</style>
+	<title>绘音 V-0.0.2</title>
+</head>
+<body><canvas id="mycanvas"></canvas></body>
 <script>
 /*
 作者：香江鱼@哔喱哔喱；香江鱼@今日头条
@@ -12,27 +33,53 @@ window.onload = function(){
 	main()
 }
 
+window.onresize = function(e){
+	canvas.width = canvas.clientWidth
+	canvas.height = canvas.clientHeight
+}
+
 function main(){
-	document.body.style.backgroundColor = 'gray'
-	canvas = document.createElement('canvas')
-	document.body.appendChild(canvas)
-	canvas.style.backgroundColor = 'white'
-	canvas.width = 1200
-	canvas.height = 600
+	canvas = document.querySelector('#mycanvas')
+	canvas.width = canvas.clientWidth
+	canvas.height = canvas.clientHeight
 	ctx = canvas.getContext('2d')
 	ctx.globalAlpha = 0.1
 	canvas.onmousedown = function(e){
-		if(!actx) initAudio()
-		canvas.down = true
-		playAndDraw(e)
+		onmousedown(e)
 	}
 	canvas.onmousemove = function(e){
-		if(canvas.down) playAndDraw(e)
+		onmousemove(e)
 	}
 	canvas.onmouseup = canvas.onmouseleave = function(e){
-		canvas.down = false
-		if(gain) stop()
+		onmouseup(e)
 	}
+	canvas.addEventListener('touchstart',function(e){
+		onmousedown({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		e.preventDefault()
+	},false)
+	canvas.addEventListener('touchmove',function(e){
+		onmousedown({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		e.preventDefault()
+		
+	},false)
+	canvas.addEventListener('touchend',function(e){
+		onmousedown({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		e.preventDefault()
+	},false)
+}
+function onmousedown(e){
+	if(!actx) initAudio()
+	canvas.down = true
+	playAndDraw(e)
+}
+
+function onmousemove(e){
+	if(canvas.down) playAndDraw(e)
+}
+
+function onmouseup(e){
+	canvas.down = false
+	if(gain) stop()
 }
 
 function playAndDraw(e){
