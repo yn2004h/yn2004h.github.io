@@ -21,8 +21,8 @@
 	}
 	#menu {
 		position: fixed;
-		right: 0px;
-		top:0px;
+		right: 10px;
+		bottom:10px;
 	}
 	</style>
 	<title>绘音 V-0.0.7</title>
@@ -89,8 +89,8 @@ function main(){
 
 function info(...args){
 	ctx.globalAlpha = 1
-	ctx.clearRect(0,canvas.height-20,canvas.width,20)
-	ctx.fillText(args.join(','),10,canvas.height,canvas.width)
+	ctx.clearRect(0,canvas.height-40,canvas.width,20)
+	ctx.fillText(args.join(','),10,canvas.height-10,canvas.width)
 }
 
 function onmousedown(e){
@@ -120,8 +120,8 @@ function clearCanvas(){
 
 
 function playAndDraw(e){
-	ctx.globalAlpha = 0.1
 	play(880*(1-e.offsetY/canvas.height),0.05)
+	ctx.globalAlpha = 0.1
 	ctx.fillRect(e.offsetX-5,e.offsetY-5,10,10)
 }
 
