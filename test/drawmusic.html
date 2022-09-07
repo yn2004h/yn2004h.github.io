@@ -58,12 +58,12 @@ function main(){
 		e.preventDefault()
 	},false)
 	canvas.addEventListener('touchmove',function(e){
-		onmousedown({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		onmousemove({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
 		e.preventDefault()
 		
 	},false)
 	canvas.addEventListener('touchend',function(e){
-		onmousedown({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		onmouseup({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
 		e.preventDefault()
 	},false)
 }
