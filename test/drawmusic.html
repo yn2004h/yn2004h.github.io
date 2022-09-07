@@ -20,7 +20,7 @@
 		background-color:#ffffff;
 	}
 	</style>
-	<title>绘音 V-0.0.3</title>
+	<title>绘音 V-0.0.4</title>
 </head>
 <body><canvas id="mycanvas"></canvas></body>
 <script>
@@ -60,15 +60,29 @@ function main(){
 		e.preventDefault()
 	},false)
 	canvas.addEventListener('touchmove',function(e){
+		info('ontouchmove')
 		onmousemove({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
 		e.preventDefault()
 		
 	},false)
 	canvas.addEventListener('touchend',function(e){
+		info('ontouchend')
+		onmouseup({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		e.preventDefault()
+	},false)
+	canvas.addEventListener('touchcancel',function(e){
+		info('ontouchcancel')
 		onmouseup({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
 		e.preventDefault()
 	},false)
 }
+
+function info(...args){
+	ctx.globalAlpha = 1
+	ctx.clearRect(0,0,canvas.width,25)
+	ctx.fillText(args.join(','),10,20,canvas.width)
+}
+
 function onmousedown(e){
 	if(!actx) initAudio()
 	canvas.down = true
@@ -85,6 +99,7 @@ function onmouseup(e){
 }
 
 function playAndDraw(e){
+	ctx.globalAlpha = 0.1
 	play(880*(1-e.offsetY/canvas.height),0.05)
 	ctx.fillRect(e.offsetX-5,e.offsetY-5,10,10)
 }
