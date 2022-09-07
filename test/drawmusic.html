@@ -20,7 +20,7 @@
 		background-color:#ffffff;
 	}
 	</style>
-	<title>绘音 V-0.0.4</title>
+	<title>绘音 V-0.0.5</title>
 </head>
 <body><canvas id="mycanvas"></canvas></body>
 <script>
@@ -67,12 +67,12 @@ function main(){
 	},false)
 	canvas.addEventListener('touchend',function(e){
 		info('ontouchend')
-		onmouseup({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		onmouseup({})
 		e.preventDefault()
 	},false)
 	canvas.addEventListener('touchcancel',function(e){
 		info('ontouchcancel')
-		onmouseup({offsetX:e.touches[0].clientX,offsetY:e.touches[0].clientY})
+		onmouseup({})
 		e.preventDefault()
 	},false)
 }
@@ -94,6 +94,7 @@ function onmousemove(e){
 }
 
 function onmouseup(e){
+	info('onmouseup',gain)
 	canvas.down = false
 	if(gain) stop()
 }
@@ -121,6 +122,7 @@ function play(fre,g){
 	gain.gain.setValueAtTime(g>0?g:0,actx.currentTime)
 }
 function stop(){
+	info('stop')
 	gain.gain.setValueAtTime(0,actx.currentTime)
 }
 </script>
