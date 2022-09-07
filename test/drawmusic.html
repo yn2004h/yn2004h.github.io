@@ -19,10 +19,19 @@
 		height:100%;
 		background-color:#ffffff;
 	}
+	#menu {
+		position: fixed;
+		right: 0px;
+	}
 	</style>
-	<title>绘音 V-0.0.5</title>
+	<title>绘音 V-0.0.6</title>
 </head>
-<body><canvas id="mycanvas"></canvas></body>
+<body>
+	<canvas id="mycanvas"></canvas>
+	<div id="menu">
+		<button onclick="clearCanvas()">清屏</button>
+	</div>
+</body>
 <script>
 /*
 作者：香江鱼@哔喱哔喱；香江鱼@今日头条
@@ -80,7 +89,7 @@ function main(){
 function info(...args){
 	ctx.globalAlpha = 1
 	ctx.clearRect(0,0,canvas.width,25)
-	ctx.fillText(args.join(','),10,20,canvas.width)
+	ctx.fillText(args.join(','),10,canvas.height-20,canvas.width)
 }
 
 function onmousedown(e){
@@ -98,6 +107,16 @@ function onmouseup(e){
 	canvas.down = false
 	if(gain) stop()
 }
+
+
+
+
+	
+function clearCanvas(){
+	cxt.clearRect(0,0,canvas.width,canvas.height)
+}
+
+
 
 function playAndDraw(e){
 	ctx.globalAlpha = 0.1
@@ -118,6 +137,7 @@ function initAudio(){
 
 function play(fre,g){
 	console.log(fre,g)
+	info('play fre='+fre)
 	osc.frequency.setValueAtTime(fre,actx.currentTime)
 	gain.gain.setValueAtTime(g>0?g:0,actx.currentTime)
 }
