@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>双语对照学习器</title>
+
+<style>
+html {
+	background-color:#ccc;
+}
+m {
+	position:fixed;
+	top:0px;
+	right:0px;
+	background-color:#fffc;
+	border-radius:0px 0px 0px 5px;
+	padding:3px;
+	padding-left:0px;
+}
+m op {
+	margin:3px;
+	cursor:pointer;
+	color:#000;
+}
+m op:hover {
+	color:#000;
+}
+
+m.show {
+	right:0px;
+}
+m.hide {
+	right:0px;
+	width:30px;
+	overflow-x:hidden;
+}
+
+
+
+c,card,s1,s2,s3,{
+	display:block;
+}
+
+c {
+	margin:50px 25px 50px 10px;
+}
+
+textarea {
+	width:95%;
+	height:90vh;
+}
+
+card {
+	display:flex;
+	background-color:#fff;
+	margin-bottom:10px;
+	padding:10px;
+	border-radius:10px;
+	box-shadow:#666 10px 10px 10px;
+}
+
+s1,s2,s3 {
+	flex:50% 1 1;
+	padding:10px;
+	cursor:default;
+}
+
+s2,s3 {
+	border-left:solid 1px #ccc;
+}
+
+.show {
+	color:#000;
+}
+.hide {
+	color:#fff;
+}
+
+
+
+</style>
+
+<script>
+let list
+
+window.onload = function(){
+	console.log('window.onload')
+	main()
+}
+
+function main(){
+	updateList()
+}
+
+function updateList(){
+	renderListStr(document.querySelector('#textdata').value)
+
+}
+
+function renderListStr(list_str){
+	list = makeList(list_str)
+	renderList(list)
+}
+
+function makeList(str){
+	let list_temp = str.trim()
+				.replace(/(\[)(.*?)\|(.*?)(\])/g,' <ruby><rb>$2</rb><rp>(</rp><rt>$3</rt><rp>)</rp></ruby>')
+				//.replaceAll('\r','')
+				//.replace(/\n\s*\n/g,'\n\n')
+				.split(/\n\s*\n/g)
+				//.split('\n\n')
+	let list = []
+	for(let v of list_temp){
+		if(v){
+			let arr = v.split('\n')
+			if(arr.length > 0){
+				list.push({a:arr[0],b:arr[1],c:arr[2]})
+			}
+		}
+	}
+	return list
+}
+
+
+function showHide(e){
+	e.className = e.className == 'hide' ? 'show' : 'hide'
+}
+
+function switchA(e){
+	let as = document.querySelectorAll('s1')
+	let stat = e.dataset.stat == 'show' ? 'hide' : 'show'
+	e.dataset.stat = stat
+	as.forEach(v=>{
+			v.className = stat
+		})
+	event.stopPropagation();
+	return false
+
+}
+
+function switchB(e){
+	let as = document.querySelectorAll('s2')
+	let stat = e.dataset.stat == 'show' ? 'hide' : 'show'
+	e.dataset.stat = stat
+	as.forEach(v=>{
+			v.className = stat
+		})
+	
+	event.stopPropagation();
+	return false
+	event=event||window.event;
+	if (event && event.stopPropagation) {
+		console.log(event)
+        event.stopPropagation();
+	}else{
+		window.event.cancelBubble=true;
+	}
+
+}
+
+function switchAB(e){
+	if(e.dataset.stat == 'ab'){
+		renderList(list,true)
+		e.dataset.stat = 'ba'
+	}else{
+		renderList(list,false)
+		e.dataset.stat = 'ab'
+	}
+}
+
+function mClick(el){
+	console.log(el)
+}
+
+function renderList(list,ba = false){
+	
+	let html = ``
+	
+	for(let v of list){
+		html += `<card><s1 onclick="showHide(this)">${ba ? v.b : v.a}</s1>
+						<s2 onclick="showHide(this)">${ba ? v.a : v.b}</s2>
+						${v.c ? '<s3 onclick="showHide(this)">'+v.c+'</s3>' : ''}
+				</card>`
+	}
+	document.querySelector('c').innerHTML = html
+
+}
+
+function readFile(e){
+	console.log(e.files)
+	let reader = new FileReader()
+	console.log(reader)
+	reader.addEventListener('load',_=>{
+		console.log(_)
+		let str = _.target.result
+		document.querySelector('#textdata').value = str
+		renderListStr(str)
+		
+	})
+	reader.readAsText(e.files[0])
+	
+}
+
+function openFile(){
+	document.querySelector('#inputfile').click()
+}
+
+
+
+
+</script>
+	
+</head>
+<body>
+<m onclick="mClick(this)" class="show">
+			
+	<op data-stat="ab" onclick="switchAB(this)">AB交换</op>
+	<op data-stat="show" onclick="switchA(this)">A开关</op>
+	<op data-stat="show" onclick="switchB(this)">B开关</op>
+	<op onclick="updateList()">刷新</op>
+	<op onclick="openFile()">打开</op>
+</m>
+<c class="showAB">
+
+</c>
+<label><br>
+列表元数据:
+<textarea id="textdata">
+
+美股暴跌纳指跌超 5%
+The US stock market plummeted and the Nasdaq fell by more than 5%. 
+
+
+景色优美
+景色がきれい
+
+会飞的小猪。
+[飛べる|とべる][子豚|こぶた]。
+
+爱哭的老虎。
+[泣き虫|なきむし]の[虎|とら]。
+
+
+
+
+
+
+
+
+</textarea>
+</label>
+<input type="file" id="inputfile" accept=".txt" onchange="readFile(this)">
+</body>
+</html>

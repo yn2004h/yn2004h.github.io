@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>手机浏览器文件操作测试 by 香江鱼@bilibili.com</title>
+
+<style>
+
+</style>
+
+<script>
+
+let file = {
+	openImage(){
+	
+	},
+
+}
+
+function openFile(){
+	//return new Promise(function()
+}
+
+let myfile
+
+this.onload = e=>{
+	console.log('onload')
+	myfile = document.querySelector('#inputfile')
+	let myp = document.querySelector('#myp')
+	myp.addEventListener('mousedown',function(e){click()},false)
+	myp.addEventListener('touchstart',function(e){click()},false)
+	
+}
+
+function click(){
+	console.log('click')
+	myfile.click()
+}
+
+
+</script>
+	
+</head>
+<body>
+<div>
+<p id="myp">click</p>
+<input type="file" name="inputfile" id="inputfile">
+</div>
+</body>
+</html>
