@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	
+		<meta charset="UTF-8">
 		<meta name="viewport" content="user-scalable=no">
 		<meta name="viewport" content="initial-scale=1,maximum-scale=1">
 		<meta name="viewport" content="width=device-width">
@@ -41,9 +43,26 @@
 	</div>
 	<div id="menu">
 		<button onclick="clearCanvas()">清屏</button>
+		<button onclick="switchFullScreen(this)">全屏</button>
 	</div>
+	
+	</body>
+</html>
 	<script type="text/javascript">
 	let preInfo = 'v0.0.9'
+	
+function switchFullScreen(e){
+	//document.body.requestFullscreen()
+	//return
+	if(document.fullscreen){
+		document.exitFullscreen()
+		e.innerHTML = '全屏'
+	}else{
+		document.body.requestFullscreen()
+		e.innerHTML = '退出全屏'
+	}
+
+}
 	
 let log = console.log
 
@@ -258,6 +277,7 @@ function sketchMode(canvas,eventsHandlers){
 			length = length1
 			
 			
+			cxt.lineCap = 'round'
 			
 			
 			cxt.beginPath()
@@ -280,8 +300,10 @@ function sketchMode(canvas,eventsHandlers){
 	})
 }
 
-sketchMode(canvas,eventsHandlers)
+window.onload = function(){
 
+	sketchMode(canvas,eventsHandlers)
+}
 
 
 class Link {
@@ -297,9 +319,7 @@ function clearCanvas(){
 }
 	
 	
-	
+
 	
 	
 	</script>
-	</body>
-</html>
