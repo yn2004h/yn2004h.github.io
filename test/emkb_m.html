@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电子音乐键盘（手机版） by 香江鱼@bilibili.com</title>
+
+<script>
+
+function midinote2fre(note) {
+    return Math.pow(2, ((note - 69) / 12)) * 440;
+}
+
+
+let types = ['sine','square','sawtooth','triangle']
+
+let notelist = {
+	'C':[60,'C'],'C#':[61,'C#/Db:'],'Db':[61,'C#/Db:'],
+	'D':[62,'D'],'D#':[63,'D#/Eb:'],'Eb':[63,'D#/Eb:'],
+	'E':[64,'E'],
+	'F':[65,'F'],'F#':[66,'F#/Gb:'],'Gb':[66,'F#/Gb:'],
+	'G':[67,'G'],'G#':[68,'G#/Ab:'],'Ab':[68,'G#/Ab:'],
+	'A':[69,'A'],'A#':[70,'A#/Bb:'],'Bb':[70,'A#/Bb:'],
+	'B':[71,'B'],
+	getPlayData(ly){
+		if(ly.type == 100){
+			return {type:'req',rtype:types[ly.rtype],req:ly.req,name:'req:'+ly.req}
+		}else{
+			let midinote = this[ly.name][0]+12*(ly.group-4)
+			return {name:this[ly.name][1]+ly.group,rtype:types[ly.rtype],req:midinote2fre(midinote),midinote}
+		}
+	},
+}
+
+
+let keylayouts = {
+	decode(code){
+		return code[0] == 100 ? 
+					notelist.getPlayData({type:code[0],rtype:code[1],req:code[2]}) :
+					notelist.getPlayData({rtype:code[0],name:code[1],group:code[2]})
+					
+	}
+}
+
+
+keylayouts.default = {
+	//KeyQ:[1,'Db',4],//参数1：波类型，参数2：音名，参数3：组名
+	//KeyW:[100,1,441],//参数1为100时，表示自定义频率，参数2：波类型，参数3：频率
+	
+	
+	
+	Backquote:[1,'B',3],
+	Digit1:[1,'C',4],
+	Digit2:[1,'D',4],
+	Digit3:[1,'E',4],
+	Digit4:[1,'F',4],
+	Digit5:[1,'G',4],
+	Digit6:[1,'A',4],
+	Digit7:[1,'B',4],
+	Digit8:[1,'C',5],
+	Digit9:[1,'D',5],
+	Digit0:[1,'E',5],
+	Minus:[1,'F',5],
+	Equal:[1,'G',5],
+//	Backspace:[0,'A',5],
+	
+	
+//	Tab:[1,'B',3],
+	KeyQ:[1,'C#',4],
+	KeyW:[1,'D#',4],
+	KeyE:[1,'E',4],
+	KeyR:[1,'F#',4],
+	KeyT:[1,'G#',4],
+	KeyY:[1,'A#',4],
+	KeyU:[1,'B',4],
+	KeyI:[1,'C#',5],
+	KeyO:[1,'D#',5],
+	KeyP:[1,'E',5],
+	BracketLeft:[1,'F#',5],
+	BracketRight:[1,'G#',5],
+	Backslash:[1,'A#',5,],
+	
+	
+	
+	KeyA:[1,'C',3],
+	KeyS:[1,'D',3],
+	KeyD:[1,'E',3],
+	KeyF:[1,'F',3],
+	KeyG:[1,'G',3],
+	KeyH:[1,'A',3],
+	KeyJ:[1,'B',3],
+	KeyK:[1,'C',4],
+	KeyL:[1,'D',4],
+	Semicolon:[1,'E',4],
+	Quote:[1,'F',4],
+	
+	KeyZ:[1,'C#',3],
+	KeyX:[1,'D#',3],
+	KeyC:[1,'E',3],
+	KeyV:[1,'F#',3],
+	KeyB:[1,'G#',3],
+	KeyN:[1,'A#',3],
+	KeyM:[1,'B',3],
+	Comma:[1,'C#',4],
+	Period:[1,'D#',4],
+	Slash:[1,'E',4],
+	
+	Space:[100,1,55],
+	
+	
+	c2:[1,'C',2],
+	cu2:[1,'C#',2],
+	d2:[1,'D',2],
+	du2:[1,'D#',2],
+	e2:[1,'E',2],
+	f2:[1,'F',2],
+	fu2:[1,'F#',2],
+	g2:[1,'G',2],
+	gu2:[1,'G#',2],
+	a2:[1,'A',2],
+	au2:[1,'A#',2],
+	b2:[1,'B',2],
+	
+	
+	c3:[1,'C',3],
+	cu3:[1,'C#',3],
+	d3:[1,'D',3],
+	du3:[1,'D#',3],
+	e3:[1,'E',3],
+	f3:[1,'F',3],
+	fu3:[1,'F#',3],
+	g3:[1,'G',3],
+	gu3:[1,'G#',3],
+	a3:[1,'A',3],
+	au3:[1,'A#',3],
+	b3:[1,'B',3],
+	
+	c4:[1,'C',4],
+	cu4:[1,'C#',4],
+	d4:[1,'D',4],
+	du4:[1,'D#',4],
+	e4:[1,'E',4],
+	f4:[1,'F',4],
+	fu4:[1,'F#',4],
+	g4:[1,'G',4],
+	gu4:[1,'G#',4],
+	a4:[1,'A',4],
+	au4:[1,'A#',4],
+	b4:[1,'B',4],
+	
+	c5:[1,'C',5],
+	cu5:[1,'C#',5],
+	d5:[1,'D',5],
+	du5:[1,'D#',5],
+	e5:[1,'E',5],
+	f5:[1,'F',5],
+	fu5:[1,'F#',5],
+	g5:[1,'G',5],
+	gu5:[1,'G#',5],
+	a5:[1,'A',5],
+	au5:[1,'A#',5],
+	b5:[1,'B',5],
+	
+}
+
+
+class Player {
+	codeNote = {}
+	oscs = {}
+	constructor(kl){
+		if(kl) this.setKeyLayout(kl)
+	}
+	
+	setKeyLayout(kl){
+		for(let k in kl){
+			
+			let {name,rtype,req,midinote} = keylayouts.decode(kl[k])
+			//rtype = rtype == 'square' && 'sawtooth'
+			this.setCodeNote({code:k,name,rtype,req,midinote})
+		}
+		return this
+	}
+	
+	initAudioContext(){
+		console.log('initAudioContext')
+		if(!this.actx) this.actx = new AudioContext()
+		return this
+	}
+	
+	setCodeNote(args){
+		//console.log(args)
+		let {code,name,rtype,req,midinote} = args
+		if(!req && midinote) req = midinote2fre(midinote) 
+		this.codeNote[code] = {name,rtype,req,midinote}
+		return this
+	}
+	
+	playCode(code){
+		info('play',code,this.codeNote[code])
+		if(!this.codeNote[code]) return
+		let osc = this.oscs[code]
+		if(!osc){
+			let cn = this.codeNote[code]
+			info(code,cn.name,cn.rtype,cn.req,cn.midinote)
+			osc = this.actx.createOscillator()
+			info(osc.type)
+			osc.type = cn.rtype
+			osc.frequency.value = cn.req
+			osc.connect(this.actx.destination)
+			osc.start()
+			
+			this.oscs[code] = osc
+		}
+	}
+	
+	stopCode(code){
+		if(!this.codeNote[code]) return
+		let osc = this.oscs[code]
+		if(osc){	
+			osc.stop()
+			osc.disconnect()
+			this.oscs[code] = null
+		}
+	
+	}
+	
+
+}
+
+
+let player = new Player(keylayouts.default)
+//player.setCodeNote({code:'KeyA',name:'A4',rtype:'square',req:440})
+
+let kb,out
+function info(...args){
+	out.innerHTML = 'info.006:'+args.join(',')
+	console.log(...args)
+}
+
+function playKey(args){
+	player.playCode(args.e.target.id)
+	if(args.e.target.className == 'wkey'){
+		args.e.target.style.backgroundColor = '#aaa'
+	}else if(args.e.target.className == 'bkey'){
+		args.e.target.style.backgroundColor = '#444'
+	}
+}
+
+function stopKey(args){
+	player.stopCode(args.e.target.id)
+	if(args.e.target.className == 'wkey'){
+		args.e.target.style.backgroundColor = '#fff'
+	}else if(args.e.target.className == 'bkey'){
+		args.e.target.style.backgroundColor = '#000'
+	}
+}
+
+this.onload = e=>{
+	kb = document.querySelector('#kb')
+	out = document.querySelector('#info')
+	info('onload')
+	
+	kb.addEventListener('touchstart',function(e){
+		player.initAudioContext()
+		
+		info('kb start',e.target.id,e.touches[0].clientX)
+		
+		playKey({e})
+		
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	kb.addEventListener('touchmove',function(e){
+		info('kb move',e.target.id,e.touches[0].clientX)
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	kb.addEventListener('touchend',function(e){
+		info('kb end',e.target.id)
+		stopKey({e})
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	kb.addEventListener('touchcancel',function(e){
+		info('kb cancel',e.target.id)
+		
+		stopKey({e})
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	kb.addEventListener('mousedown',function(e){
+		
+		player.initAudioContext()
+		
+		info('kb mousedown',e.target.id,e)
+		
+		playKey({e})
+		
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	
+	kb.addEventListener('mouseup',function(e){
+		
+		player.initAudioContext()
+		
+		info('kb mouseup',e.target.id,e)
+		
+		stopKey({e})
+		
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	
+	kb.addEventListener('mouseleave',function(e){
+		
+		//player.initAudioContext()
+		
+		info('kb mouseleave',e.target.id,e)
+		
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	kb.addEventListener('mouseout',function(e){
+		
+		//player.initAudioContext()
+		
+		info('kb mouseout',e.target.id,e)
+		stopKey({e})
+		
+		e.preventDefault()
+		e.stopPropagation()
+	},false)
+	
+	
+
+}
+
+
+function switchFullScreen(e){
+	//document.body.requestFullscreen()
+	//return
+	if(document.fullscreen){
+		document.exitFullscreen()
+		e.innerHTML = '全屏'
+	}else{
+		document.body.requestFullscreen()
+		e.innerHTML = '退出全屏'
+	}
+
+}
+</script>
+
+
+<style>
+html,body {
+	margin:0px;
+	padding:0px;
+	width:100%;
+	height:100%;
+}
+#kb {
+	padding-top:30px;
+	padding-bottom:30px;
+	width:100%;
+	height:100%;
+	display:flex;
+	flex-wrap:wrap-reverse;
+	background-color:#eee;
+	align-content:stretch;
+	justify-content:stretch;
+	box-sizing:border-box;
+}
+
+#info {
+	color:#f00;
+	font-size:12px;
+
+}
+.wkey,.bkey {
+	border:solid 1px #555;
+	width:60px;
+	margin:0px 0px 0px 0px;
+	text-align:center;
+	padding-top:30px;
+	
+}
+
+.wkey {
+	background-color:#fff;
+}
+.bkey {
+	background-color:#000;
+	color:#fff;
+}
+
+#info {
+	display:none;
+	position:fixed;
+	top:0px;
+	left:0px;
+	padding:10px;
+	background-color:#bbb9;
+	width:100%;
+}
+
+
+#menu {
+	position:fixed;
+	right:2px;
+	top:2px;
+}
+</style>
+</head>
+<body>
+<div id="kb">
+
+
+	<div id="c2" class="wkey">C2</div>
+	<div id="cu2" class="bkey">#b</div>
+	<div id="d2" class="wkey">D2</div>
+	<div id="du2" class="bkey">#b</div>
+	<div id="e2" class="wkey">E2</div>
+	<div id="f2" class="wkey">F2</div>
+	<div id="fu2" class="bkey">#b</div>
+	<div id="g2" class="wkey">G2</div>
+	<div id="gu2" class="bkey">#b</div>
+	<div id="a2" class="wkey">A2</div>
+	<div id="au2" class="bkey">#b</div>
+	<div id="b2" class="wkey">B2</div>
+
+	<div id="c3" class="wkey">C3</div>
+	<div id="cu3" class="bkey">#b</div>
+	<div id="d3" class="wkey">D3</div>
+	<div id="du3" class="bkey">#b</div>
+	<div id="e3" class="wkey">E3</div>
+	<div id="f3" class="wkey">F3</div>
+	<div id="fu3" class="bkey">#b</div>
+	<div id="g3" class="wkey">G3</div>
+	<div id="gu3" class="bkey">#b</div>
+	<div id="a3" class="wkey">A3</div>
+	<div id="au3" class="bkey">#b</div>
+	<div id="b3" class="wkey">B3</div>
+
+
+
+
+
+	<div id="c4" class="wkey">C4</div>
+	<div id="cu4" class="bkey">#b</div>
+	<div id="d4" class="wkey">D4</div>
+	<div id="du4" class="bkey">#b</div>
+	<div id="e4" class="wkey">E4</div>
+	<div id="f4" class="wkey">F4</div>
+	<div id="fu4" class="bkey">#b</div>
+	<div id="g4" class="wkey">G4</div>
+	<div id="gu4" class="bkey">#b</div>
+	<div id="a4" class="wkey">A4</div>
+	<div id="au4" class="bkey">#b</div>
+	<div id="b4" class="wkey">B4</div>
+	
+	
+
+	<div id="c5" class="wkey">C5</div>
+	<div id="cu5" class="bkey">#b</div>
+	<div id="d5" class="wkey">D5</div>
+	<div id="du5" class="bkey">#b</div>
+	<div id="e5" class="wkey">E5</div>
+	<div id="f5" class="wkey">F5</div>
+	<div id="fu5" class="bkey">#b</div>
+	<div id="g5" class="wkey">G5</div>
+	<div id="gu5" class="bkey">#b</div>
+	<div id="a5" class="wkey">A5</div>
+	<div id="au5" class="bkey">#b</div>
+	<div id="b5" class="wkey">B5</div>
+	
+</div>
+<div id="info"></div>
+
+	<div id="menu">
+		<button onclick="switchFullScreen(this)">全屏</button>
+	</div>
+</body>
+</html>

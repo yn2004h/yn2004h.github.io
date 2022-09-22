@@ -13,7 +13,9 @@
 
 let file = {
 	openImage(){
-	
+		if(!this.imageInput){
+			this.imageInput = document.creat
+		}
 	},
 
 }
@@ -35,7 +37,8 @@ this.onload = e=>{
 
 function click(){
 	console.log('click')
-	myfile.click()
+	//myfile.click()
+	file.openImage()
 }
 
 
