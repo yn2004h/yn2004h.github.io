@@ -386,11 +386,23 @@ html,body {
 }
 .wkey,.bkey {
 	border:solid 1px #555;
-	width:60px;
 	margin:0px 0px 0px 0px;
 	text-align:center;
-	padding-top:30px;
+	padding-top:20px;
 	
+}
+
+@media (orientation: portrait){
+	.wkey,.bkey{
+		width:16vw;
+	}
+}
+
+/* 横屏 */  
+@media (orientation: landscape){
+	.wkey,.bkey{
+		width:6vw;
+	}
 }
 
 .wkey {
