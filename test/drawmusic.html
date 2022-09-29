@@ -25,12 +25,18 @@
 		bottom:10px;
 	}
 	</style>
-	<title>绘音 V-0.0.7</title>
+	<title>绘音 V-0.1</title>
 </head>
 <body>
 	<canvas id="mycanvas"></canvas>
 	<div id="menu">
+		<button onclick="setR(1)">R1.0</button>
+		<button onclick="setR(2)">R2.0</button>
+		<button onclick="setR(3)">R3.0</button>
+		<button onclick="switchBW()">黑白交换</button>
 		<button onclick="clearCanvas()">清屏</button>
+		<button onclick="switchFullScreen(this)">全屏</button>
+		<button onclick="window.location.href='../'">主页</button>
 	</div>
 </body>
 <script>
@@ -38,6 +44,42 @@
 作者：香江鱼@哔喱哔喱；香江鱼@今日头条
 */
 let canvas,ctx,actx,osc,gain
+let gainV = 0.5
+let canvasBg = '#fff'
+let fillStyle = '#000'
+let globalAlpha = 0.5
+let r = 1
+let PI2 = Math.PI*2
+
+
+function switchFullScreen(e){
+	//document.body.requestFullscreen()
+	//return
+	if(document.fullscreen){
+		document.exitFullscreen()
+		e.innerHTML = '全屏'
+	}else{
+		document.body.requestFullscreen()
+		e.innerHTML = '退出全屏'
+	}
+
+}
+
+
+function switchBW(e){
+	if(canvasBg == '#fff'){
+		canvasBg = '#000'
+		fillStyle = '#fff'
+		canvas.style.backgroundColor = canvasBg
+		ctx.fillStyle = fillStyle
+	}else{
+		canvasBg = '#fff'
+		fillStyle = '#000'
+		canvas.style.backgroundColor = canvasBg
+		ctx.fillStyle = fillStyle
+	}
+
+}
 
 window.onload = function(){
 	main()
@@ -117,12 +159,21 @@ function clearCanvas(){
 	ctx.clearRect(0,0,canvas.width,canvas.height)
 }
 
-
+function setR(v){
+	r = v
+}
 
 function playAndDraw(e){
-	play(880*(1-e.offsetY/canvas.height),0.05)
-	ctx.globalAlpha = 0.1
-	ctx.fillRect(e.offsetX-5,e.offsetY-5,10,10)
+	play(880*(1-e.offsetY/canvas.height),gainV)
+	draw(e.offsetX,e.offsetY)
+}
+
+function draw(x,y){
+	ctx.globalAlpha = globalAlpha
+	ctx.beginPath()
+	ctx.arc(x,y,r-0.5+Math.random(),0,PI2)
+	ctx.fill()
+	//ctx.fillRect(e.offsetX-5,e.offsetY-5,10,10)
 }
 
 function initAudio(){

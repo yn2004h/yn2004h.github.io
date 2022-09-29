@@ -114,8 +114,8 @@ function makeList(str){
 	for(let v of list_temp){
 		if(v){
 			let arr = v.split('\n')
-			if(arr.length > 0){
-				list.push({a:arr[0],b:arr[1],c:arr[2]})
+			if(arr.length == 4){
+				list.push({a:arr[2],b:arr[3]})
 			}
 		}
 	}
@@ -180,7 +180,6 @@ function renderList(list,ba = false){
 	for(let v of list){
 		html += `<card><s1 onclick="showHide(this)">${ba ? v.b : v.a}</s1>
 						<s2 onclick="showHide(this)">${ba ? v.a : v.b}</s2>
-						${v.c ? '<s3 onclick="showHide(this)">'+v.c+'</s3>' : ''}
 				</card>`
 	}
 	document.querySelector('c').innerHTML = html
@@ -219,7 +218,7 @@ function openFile(){
 	<op data-stat="show" onclick="switchA(this)">A开关</op>
 	<op data-stat="show" onclick="switchB(this)">B开关</op>
 	<op onclick="updateList()">刷新</op>
-	<op onclick="openFile()">打开</op>
+	<op onclick="openFile()">打开srt</op>
 		<op onclick="window.location.href='../'">主页</op>
 </m>
 <c class="showAB">
@@ -228,29 +227,41 @@ function openFile(){
 <label><br>
 列表元数据:
 <textarea id="textdata">
+1
+00:00:11,070 --> 00:00:16,130
+好累  寒风刺骨
+It's tiring, the winds blowing, its icy cold.
 
-美股暴跌纳指跌超 5%
-The US stock market plummeted and the Nasdaq fell by more than 5%. 
+2
+00:00:17,350 --> 00:00:20,600
+这么陡峭  不知这些砖块是怎么搬上来的
+This is so steep, I don't know how they got the bricks up here.
 
+3
+00:00:22,580 --> 00:00:25,110
+中国的长城
+The Great Wall of China.
 
-景色优美
-景色がきれい
+4
+00:00:34,800 --> 00:00:36,350
+我仿佛站在了世界之巅
+It's like being on the top of the world.
 
-会飞的小猪。
-[飛べる|とべる][子豚|こぶた]。
+5
+00:00:39,770 --> 00:00:42,110
+无尽的城墙  无尽的瞭望塔
+Endless wall, endless watchtowers
 
-爱哭的老虎。
-[泣き虫|なきむし]の[虎|とら]。
-
-
-
-
+6
+00:00:42,110 --> 00:00:43,860
+一直延伸到天边
+all the way to the horizon.
 
 
 
 
 </textarea>
 </label>
-<input type="file" id="inputfile" accept=".txt" onchange="readFile(this)">
+<input type="file" id="inputfile" accept=".srt" onchange="readFile(this)">
 </body>
 </html>

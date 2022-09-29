@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="viewport" content="user-scalable=no">
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1">
+	<meta name="viewport" content="width=device-width">
 <title>电子音乐键盘（手机版） by 香江鱼@bilibili.com</title>
 
 <script>
@@ -206,7 +208,11 @@ class Player {
 			info(osc.type)
 			osc.type = cn.rtype
 			osc.frequency.value = cn.req
-			osc.connect(this.actx.destination)
+			osc.g = this.actx.createGain()
+			osc.g.gain.value = 0.5
+			osc.connect(osc.g)
+			osc.g.connect(this.actx.destination)
+			//osc.connect(this.actx.destination)
 			osc.start()
 			
 			this.oscs[code] = osc
@@ -498,6 +504,8 @@ html,body {
 
 	<div id="menu">
 		<button onclick="switchFullScreen(this)">全屏</button>
+		
+		<button onclick="window.location.href='../'">主页</button>
 	</div>
 </body>
 </html>
